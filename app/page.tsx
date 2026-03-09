@@ -1,0 +1,7 @@
+export default function Home() {
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <h1 className="font-serif text-6xl">RR Design House</h1>
+    </main>
+  );
+}
