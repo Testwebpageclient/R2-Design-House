@@ -23,12 +23,11 @@ const lineReveal = {
 
 /* ─── Collage Image Data ─── */
 const collageImages = [
-  { src: "/images/imageliving.jpeg", alt: "Living Room", span: "col-span-2 row-span-2", delay: 0 },
-  { src: "/images/imagebedroom.jpeg", alt: "Bedroom", span: "col-span-1 row-span-1", delay: 0.1 },
-  { src: "/images/imagemodularkitchen.jpeg", alt: "Kitchen", span: "col-span-1 row-span-1", delay: 0.2 },
-  { src: "/images/imageprayerhall.jpeg", alt: "Prayer Room", span: "col-span-1 row-span-2", delay: 0.15 },
-  { src: "/images/imageliving2.jpeg", alt: "Luxury Living", span: "col-span-1 row-span-1", delay: 0.25 },
-  { src: "/images/imagebedroom3.jpeg", alt: "Master Suite", span: "col-span-1 row-span-1", delay: 0.3 },
+  { src: "/images/imagemodularkitchen.jpeg", alt: "Modular Kitchen", gridArea: "1 / 1 / 3 / 2", delay: 0 },
+  { src: "/images/imageliving.jpeg", alt: "Living Room", gridArea: "1 / 2 / 2 / 4", delay: 0.1 },
+  { src: "/images/imagekitchen.jpeg", alt: "Kitchen Design", gridArea: "1 / 4 / 3 / 5", delay: 0.15 },
+  { src: "/images/imageliving2.jpeg", alt: "Luxury Living", gridArea: "2 / 2 / 3 / 3", delay: 0.2 },
+  { src: "/images/imagebedroom3.jpeg", alt: "Master Suite", gridArea: "2 / 3 / 3 / 4", delay: 0.25 },
 ];
 
 /* ─── 3D Tilt Card ─── */
@@ -62,8 +61,8 @@ function CollageCard({ img, index }: { img: typeof collageImages[0]; index: numb
       initial={{ opacity: 0, y: 60, scale: 0.92 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 1, delay: 0.4 + img.delay, ease: [0.22, 1, 0.36, 1] }}
-      className={`${img.span} group cursor-pointer`}
-      style={{ perspective: 900 }}
+      className="group cursor-pointer"
+      style={{ perspective: 900, gridArea: img.gridArea }}
     >
       <motion.div
         animate={{ y: floatY }}
@@ -72,13 +71,13 @@ function CollageCard({ img, index }: { img: typeof collageImages[0]; index: numb
       >
         <motion.div
           style={{ rotateX, rotateY }}
-          className="relative w-full h-full overflow-hidden"
+          className="relative w-full h-full overflow-hidden bg-[#f0efe8]"
         >
-          {/* Image with Ken Burns on hover */}
+          {/* Image — no cropping */}
           <img
             src={img.src}
             alt={img.alt}
-            className="w-full h-full object-cover transition-transform duration-[2.5s] ease-out group-hover:scale-[1.12]"
+            className="w-full h-full object-contain transition-transform duration-[2.5s] ease-out group-hover:scale-[1.06]"
           />
 
           {/* Dark gradient overlay */}
@@ -191,23 +190,30 @@ function HeroSection() {
 
         {/* ── Premium Collage Grid ── */}
         <div className="relative">
-          {/* Mobile: 2-col grid */}
-          <div className="grid grid-cols-2 gap-2 lg:hidden">
-            {collageImages.slice(0, 4).map((img, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 + i * 0.1 }}
-                className={`overflow-hidden ${i === 0 ? 'col-span-2 aspect-[16/9]' : 'aspect-square'}`}
-              >
-                <img src={img.src} alt={img.alt} className="w-full h-full object-cover" />
-              </motion.div>
-            ))}
+          {/* Mobile: orientation-aware grid — no cropping */}
+          <div className="grid grid-cols-2 gap-1 lg:hidden">
+            {/* Landscape — full width */}
+            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="col-span-2 bg-[#f0efe8]" style={{ aspectRatio: '640/440' }}>
+              <img src="/images/imageliving.jpeg" alt="Living Room" className="w-full h-full object-contain" />
+            </motion.div>
+            {/* Portraits — side by side */}
+            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }} className="bg-[#f0efe8]" style={{ aspectRatio: '640/837' }}>
+              <img src="/images/imagemodularkitchen.jpeg" alt="Modular Kitchen" className="w-full h-full object-contain" />
+            </motion.div>
+            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }} className="bg-[#f0efe8]" style={{ aspectRatio: '640/853' }}>
+              <img src="/images/imagekitchen.jpeg" alt="Kitchen Design" className="w-full h-full object-contain" />
+            </motion.div>
+            {/* Landscapes — side by side */}
+            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.5 }} className="bg-[#f0efe8]" style={{ aspectRatio: '640/480' }}>
+              <img src="/images/imageliving2.jpeg" alt="Luxury Living" className="w-full h-full object-contain" />
+            </motion.div>
+            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }} className="bg-[#f0efe8]" style={{ aspectRatio: '640/497' }}>
+              <img src="/images/imagebedroom3.jpeg" alt="Master Suite" className="w-full h-full object-contain" />
+            </motion.div>
           </div>
 
           {/* Desktop: premium asymmetric grid with 3D tilt */}
-          <div className="hidden lg:grid grid-cols-4 grid-rows-3 gap-2" style={{ height: '580px' }}>
+          <div className="hidden lg:grid gap-1" style={{ height: '560px', gridTemplateColumns: '1.6fr 1fr 0.96fr 1.57fr', gridTemplateRows: '1.8fr 1fr' }}>
             {collageImages.map((img, i) => (
               <CollageCard key={i} img={img} index={i} />
             ))}
@@ -278,11 +284,11 @@ export default function Home() {
               transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
               className="lg:col-span-7 relative"
             >
-              <div className="relative aspect-[4/5] max-h-[620px] overflow-hidden">
+              <div className="relative overflow-hidden" style={{ aspectRatio: '640/480' }}>
                 <img
                   src="/images/imageliving2.jpeg"
                   alt="Elegant Living Room"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                   loading="lazy"
                 />
               </div>
@@ -406,11 +412,11 @@ export default function Home() {
             ].map((service, idx) => (
               <motion.div key={idx} variants={fadeIn}>
                 <Link to="/services" className="group block">
-                  <div className="relative aspect-[3/4] overflow-hidden mb-6">
+                  <div className="relative aspect-square overflow-hidden mb-6 bg-[#f5f4f0]">
                     <img
                       src={service.img}
                       alt={service.title}
-                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-[1.2s] ease-out"
+                      className="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-[1.2s] ease-out"
                       loading="lazy"
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500" />
@@ -436,7 +442,7 @@ export default function Home() {
             variants={stagger}
             className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center"
           >
-            <motion.div variants={fadeIn} className="relative aspect-[4/3] overflow-hidden group">
+            <motion.div variants={fadeIn} className="relative overflow-hidden group bg-[#1a1a1a] aspect-square">
               <video
                 src="/videos/living.mp4"
                 autoPlay
@@ -479,26 +485,27 @@ export default function Home() {
       </section>
 
       {/* ─── GALLERY STRIP ─── */}
-      <section className="py-0 bg-white">
-        <div className="grid grid-cols-2 md:grid-cols-4">
+      <section className="py-0 bg-[#f5f4f0]">
+        <div className="flex items-center justify-center">
           {[
-            "/images/imagekitchen.jpeg",
-            "/images/imagebedroom2.jpeg",
-            "/images/imageprayerhall.jpeg",
-            "/images/imagekitchen3.jpeg"
-          ].map((src, i) => (
+            { src: "/images/imagekitchen.jpeg", ratio: "640/853" },
+            { src: "/images/imagebedroom2.jpeg", ratio: "576/576" },
+            { src: "/images/imgliving3.jpeg", ratio: "640/480" },
+            { src: "/images/imagekitchen3.jpeg", ratio: "640/853" }
+          ].map((img, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: i * 0.1 }}
-              className="aspect-square overflow-hidden"
+              className="overflow-hidden h-48 md:h-72 lg:h-80 bg-[#f5f4f0]"
+              style={{ aspectRatio: img.ratio }}
             >
               <img
-                src={src}
+                src={img.src}
                 alt="Project"
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-[1.5s] ease-out"
+                className="w-full h-full object-contain hover:scale-105 transition-transform duration-[1.5s] ease-out"
                 loading="lazy"
               />
             </motion.div>
@@ -531,12 +538,12 @@ export default function Home() {
               </motion.p>
             </div>
 
-            {/* Video Grid */}
-            <motion.div variants={fadeIn} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Main video — large */}
-              <div className="relative aspect-video md:aspect-[4/3] overflow-hidden group">
+            {/* Video Grid — portrait sides + landscape center, all same height */}
+            <motion.div variants={fadeIn} className="flex justify-center gap-3 mx-auto" style={{ height: 'min(70vh, 600px)' }}>
+              {/* Left — Living Room (portrait) */}
+              <div className="relative overflow-hidden group h-full" style={{ aspectRatio: '10/16' }}>
                 <video
-                  src="/videos/promotion.mp4"
+                  src="/videos/living.mp4"
                   autoPlay
                   muted
                   loop
@@ -544,53 +551,54 @@ export default function Home() {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s] ease-out"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                <div className="absolute bottom-4 left-4">
+                  <span className="text-[10px] tracking-[0.4em] uppercase text-white/80 font-medium bg-black/30 backdrop-blur-sm px-3 py-1.5">
+                    Living Room
+                  </span>
+                </div>
+                <div className="absolute top-3 left-3 w-5 h-5 border-t border-l border-[#d4af37]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute bottom-3 right-3 w-5 h-5 border-b border-r border-[#d4af37]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              </div>
+
+              {/* Center — Renovation (portrait video rotated to landscape) */}
+              <div className="relative overflow-hidden group h-full" style={{ aspectRatio: '4/3' }}>
+                <video
+                  src="/videos/reonvation video.mp4"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-90 origin-center group-hover:scale-105 transition-transform duration-[2s] ease-out"
+                  style={{ height: '100%', width: 'auto', minWidth: '178%', minHeight: '56%' }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                 <div className="absolute bottom-5 left-5">
                   <span className="text-[10px] tracking-[0.4em] uppercase text-white/80 font-medium bg-black/30 backdrop-blur-sm px-4 py-2">
-                    Studio Showcase
+                    Renovation
                   </span>
                 </div>
                 <div className="absolute top-3 left-3 w-6 h-6 border-t border-l border-[#d4af37]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="absolute bottom-3 right-3 w-6 h-6 border-b border-r border-[#d4af37]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </div>
 
-              {/* Two stacked videos */}
-              <div className="grid grid-rows-2 gap-4">
-                <div className="relative aspect-video overflow-hidden group">
-                  <video
-                    src="/videos/kitchen.mp4"
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s] ease-out"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                  <div className="absolute bottom-4 left-4">
-                    <span className="text-[10px] tracking-[0.4em] uppercase text-white/80 font-medium bg-black/30 backdrop-blur-sm px-3 py-1.5">
-                      Kitchen Design
-                    </span>
-                  </div>
-                  <div className="absolute top-3 left-3 w-5 h-5 border-t border-l border-[#d4af37]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="absolute bottom-3 right-3 w-5 h-5 border-b border-r border-[#d4af37]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              {/* Right — Kitchen (portrait) */}
+              <div className="relative overflow-hidden group h-full" style={{ aspectRatio: '10/16' }}>
+                <video
+                  src="/videos/kitchen.mp4"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s] ease-out"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                <div className="absolute bottom-4 left-4">
+                  <span className="text-[10px] tracking-[0.4em] uppercase text-white/80 font-medium bg-black/30 backdrop-blur-sm px-3 py-1.5">
+                    Kitchen Design
+                  </span>
                 </div>
-                <div className="relative aspect-video overflow-hidden group">
-                  <video
-                    src="/videos/reonvation video.mp4"
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s] ease-out"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                  <div className="absolute bottom-4 left-4">
-                    <span className="text-[10px] tracking-[0.4em] uppercase text-white/80 font-medium bg-black/30 backdrop-blur-sm px-3 py-1.5">
-                      Renovation
-                    </span>
-                  </div>
-                  <div className="absolute top-3 left-3 w-5 h-5 border-t border-l border-[#d4af37]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="absolute bottom-3 right-3 w-5 h-5 border-b border-r border-[#d4af37]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                </div>
+                <div className="absolute top-3 left-3 w-5 h-5 border-t border-l border-[#d4af37]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute bottom-3 right-3 w-5 h-5 border-b border-r border-[#d4af37]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </div>
             </motion.div>
           </motion.div>

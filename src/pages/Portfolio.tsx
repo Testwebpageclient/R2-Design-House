@@ -357,45 +357,7 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {/* ─── BEFORE & AFTER ─── */}
-      <BeforeAfterSection />
 
-      {/* ─── VIDEO SHOWCASE ─── */}
-      <section className="py-28 md:py-40 px-6 bg-[#1a1a1a]">
-        <div className="container mx-auto max-w-7xl">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={stagger}
-            className="text-center mb-16 md:mb-20 space-y-4"
-          >
-            <motion.p variants={fadeIn} className="text-xs tracking-[0.35em] uppercase text-[#d4af37] font-light">
-              Media Showcase
-            </motion.p>
-            <motion.h2 variants={fadeIn} className="text-3xl md:text-4xl lg:text-5xl font-serif text-white">
-              Design Reels
-            </motion.h2>
-            <motion.p variants={fadeIn} className="text-base text-white/50 font-light leading-[1.9] tracking-wide max-w-xl mx-auto">
-              Watch our design stories come to life through immersive video presentations.
-            </motion.p>
-          </motion.div>
-
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={stagger}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto"
-          >
-            {reelVideos.map((video, idx) => (
-              <motion.div key={idx} variants={fadeIn}>
-                <VideoCard src={video.src} title={video.title} />
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
 
       {/* ─── LIGHTBOX ─── */}
       <AnimatePresence>
